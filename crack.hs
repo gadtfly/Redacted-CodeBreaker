@@ -32,4 +32,4 @@ main = do
   candidateKeys <- dict
   let plaintext = crack ciphertext candidateKeys
   print plaintext
-  writeFile "plaintext" plaintext
+  writeFile "solution" plaintext
