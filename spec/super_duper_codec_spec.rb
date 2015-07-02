@@ -28,20 +28,6 @@ describe SuperDuperCodec do
   end
 
   describe SuperDuperCodec::Cracker do
-    describe '::cracked?' do
-      it 'recognizes plaintext as cracked' do
-        expect(SuperDuperCodec::Cracker.cracked?(plaintext)).to eq(true)
-      end
-
-      it 'does not recognize incorrectly decoded text as cracked' do
-        expect(SuperDuperCodec::Cracker.cracked?(SuperDuperCodec.decode(ciphertext, 'sister'))).to eq(false)
-      end
-
-      it 'does not recognize gibberrish as cracked' do
-        expect(SuperDuperCodec::Cracker.cracked?("asdf")).to eq(false)
-      end
-    end
-
     describe '#crack!' do
       it 'recovers the plaintext exactly' do
         expect(SuperDuperCodec::Cracker.crack!(ciphertext)).to eq(plaintext)

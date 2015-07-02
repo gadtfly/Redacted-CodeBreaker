@@ -29,23 +29,39 @@ module SuperDuperCodec
   module Cracker
     class << self
       DICT = File.read('/usr/share/dict/words').lines.map(&:strip).map(&:downcase)
+      ARBITRARY_CHARACTER_SCORE_THRESHOLD = 0.95
 
       def unprintable_characters(s)
         s.scan(/[^[:print:]]/)
       end
 
       def words(s)
-        s.scan(/[[:alnum:]]+/)
+        s.scan(/[[:alpha:]]+/)
       end
 
-      def cracked?(s)
-        s = s.downcase
-        unprintable_characters(s).empty? && words(s).all?(&DICT.method(:include?))
+      def likely_characters(s)
+        s.scan(/[[:alpha:][:space:]]/)
+      end
+
+      def character_score(s)
+        if unprintable_characters(s).empty?
+          likely_characters(s).size.fdiv(s.size)
+        else
+          0
+        end
+      end
+
+      def word_score(s)
+        if character_score(s) >= ARBITRARY_CHARACTER_SCORE_THRESHOLD
+          words(s).count(&DICT.method(:include?))
+        else
+          0
+        end
       end
 
       def find_key!(ciphertext)
-        DICT.find do |candidate_key|
-          cracked?(SuperDuperCodec.decode(ciphertext, candidate_key))
+        DICT.max_by do |candidate_key|
+          word_score(SuperDuperCodec.decode(ciphertext, candidate_key))
         end
       end
 
