@@ -3,7 +3,7 @@ def original_python!(*args)
 end
 
 describe SuperDuperCodec do
-  let(:plaintext){ 'this is the plaintext' }
+  let(:plaintext){ 'this is the plain text!' }
   let(:key){ 'brother' }
   let(:ciphertext){ SuperDuperCodec.encode(plaintext, key) }
 
@@ -24,6 +24,28 @@ describe SuperDuperCodec do
 
     it 'plaintext matches original python' do
       expect(SuperDuperCodec.decode(ciphertext, key).strip).to eq(original_python!('decode', ciphertext, key).strip)
+    end
+  end
+
+  describe SuperDuperCodec::Cracker do
+    describe '::cracked?' do
+      it 'recognizes plaintext as cracked' do
+        expect(SuperDuperCodec::Cracker.cracked?(plaintext)).to eq(true)
+      end
+
+      it 'does not recognize incorrectly decoded text as cracked' do
+        expect(SuperDuperCodec::Cracker.cracked?(SuperDuperCodec.decode(ciphertext, 'sister'))).to eq(false)
+      end
+
+      it 'does not recognize gibberrish as cracked' do
+        expect(SuperDuperCodec::Cracker.cracked?("asdf")).to eq(false)
+      end
+    end
+
+    describe '#crack!' do
+      it 'recovers the plaintext exactly' do
+        expect(SuperDuperCodec::Cracker.crack!(ciphertext)).to eq(plaintext)
+      end
     end
   end
 end
