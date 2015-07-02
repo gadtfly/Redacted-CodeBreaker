@@ -1,3 +1,5 @@
+require_relative '../super_duper_codec'
+
 def original_python!(*args)
   `python spec/super_duper_codec.py #{args.map(&:inspect).join(' ')}`
 end

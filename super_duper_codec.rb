@@ -1,28 +1,14 @@
-require 'base64'
+require_relative 'super_duper/ciphertext'
+require_relative 'super_duper/plaintext'
 
 module SuperDuperCodec
   class << self
     def encode(plaintext, key)
-      ciphertext = ''
-      plaintext.length.times do |i|
-        character = plaintext[i]
-        key_char = key[i % key.length]
-        cipher_character = (character.ord + key_char.ord) % 256
-        ciphertext += cipher_character.chr
-      end
-      Base64.strict_encode64(ciphertext)
+      SuperDuper::Ciphertext.new(plaintext, key).to_base64
     end
 
-    def decode(ciphertext, key)
-      ciphertext = Base64.decode64(ciphertext)
-      plaintext = ''
-      ciphertext.length.times do |i|
-        character = ciphertext[i]
-        key_char = key[i % key.length]
-        plain_character = (character.ord - key_char.ord) % 256
-        plaintext += plain_character.chr
-      end
-      plaintext
+    def decode(base64_ciphertext, key)
+      SuperDuper::Plaintext.from_base64(base64_ciphertext, key).to_s
     end
   end
 end
