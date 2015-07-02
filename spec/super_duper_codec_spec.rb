@@ -3,8 +3,8 @@ def original_python!(*args)
 end
 
 describe SuperDuperCodec do
-  let(:plaintext){ 'asdf' }
-  let(:key){ 'qwer' }
+  let(:plaintext){ 'this is the plaintext' }
+  let(:key){ 'brother' }
   let(:ciphertext){ SuperDuperCodec.encode(plaintext, key) }
 
   describe '::encode' do
