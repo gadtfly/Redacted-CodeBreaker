@@ -1,24 +1,29 @@
-describe SuperDuperCodec do
-  describe '::encode' do
+def original_python!(*args)
+  `python spec/super_duper_codec.py #{args.map(&:inspect).join(' ')}`
+end
 
+describe SuperDuperCodec do
+  let(:plaintext){ 'asdf' }
+  let(:key){ 'qwer' }
+  let(:ciphertext){ SuperDuperCodec.encode(plaintext, key) }
+
+  describe '::encode' do
     it 'changes the plaintext somehow' do
-      expect(SuperDuperCodec.encode('asdf', 'qwer')).to_not include('asdf')
+      expect(ciphertext).to_not include(plaintext)
     end
 
     it 'ciphertext matches original python' do
-      expect(SuperDuperCodec.encode('asdf', 'qwer').strip).to eq(`python spec/super_duper_codec.py encode asdf qwer`.strip)
+      expect(ciphertext.strip).to eq(original_python!('encode', plaintext, key).strip)
     end
   end
 
   describe '::decode' do
-    let(:ciphertext){ SuperDuperCodec.encode('asdf', 'qwer') }
-
     it 'reproduces the plaintext exactly' do
-      expect(SuperDuperCodec.decode(ciphertext, 'qwer')).to eq('asdf')
+      expect(SuperDuperCodec.decode(ciphertext, key)).to eq(plaintext)
     end
 
     it 'plaintext matches original python' do
-      expect(SuperDuperCodec.decode(ciphertext, 'qwer').strip).to eq(`python spec/super_duper_codec.py decode "#{ciphertext}" qwer`.strip)
+      expect(SuperDuperCodec.decode(ciphertext, key).strip).to eq(original_python!('decode', ciphertext, key).strip)
     end
   end
 end
