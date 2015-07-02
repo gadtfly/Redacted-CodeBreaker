@@ -28,7 +28,7 @@ module SuperDuperCodec
 
   module Cracker
     class << self
-      WORDS = File.read('/usr/share/dict/words').lines.map(&:strip).map(&:downcase)
+      DICT = File.read('/usr/share/dict/words').lines.map(&:strip).map(&:downcase)
 
       def unprintable_characters(s)
         s.scan(/[^[:print:]]/)
@@ -40,11 +40,11 @@ module SuperDuperCodec
 
       def cracked?(s)
         s = s.downcase
-        unprintable_characters(s).empty? && words(s).all?(&WORDS.method(:include?))
+        unprintable_characters(s).empty? && words(s).all?(&DICT.method(:include?))
       end
 
       def find_key!(ciphertext)
-        WORDS.find do |candidate_key|
+        DICT.find do |candidate_key|
           cracked?(SuperDuperCodec.decode(ciphertext, candidate_key))
         end
       end
