@@ -10,11 +10,11 @@ module SuperDuperCodec
         cipher_character = (character.ord + key_char.ord) % 256
         ciphertext += cipher_character.chr
       end
-      Base64.encode64(ciphertext)
+      Base64.strict_encode64(ciphertext)
     end
 
     def decode(ciphertext, key)
-      ciphertext = Base64.decode64(ciphertext)
+      ciphertext = Base64.strict_decode64(ciphertext)
       plaintext = ''
       ciphertext.length.times do |i|
         character = ciphertext[i]
