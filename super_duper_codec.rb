@@ -14,7 +14,7 @@ module SuperDuperCodec
     end
 
     def decode(ciphertext, key)
-      ciphertext = Base64.strict_decode64(ciphertext)
+      ciphertext = Base64.decode64(ciphertext)
       plaintext = ''
       ciphertext.length.times do |i|
         character = ciphertext[i]
