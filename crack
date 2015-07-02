@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require_relative 'super_duper_codec'
+ciphertext = ARGV.first ? File.read(ARGV.first) : SuperDuperCodec.encode("this is the plain text!", "brother")
+puts SuperDuperCodec::Cracker.crack!(ciphertext)
